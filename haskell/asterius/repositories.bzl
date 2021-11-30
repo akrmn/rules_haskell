@@ -179,6 +179,24 @@ def _ahc_impl(ctx):
         executable = False,
     )
 
+    # We recover the list of toolchain libraries from the BUILD file,
+    # and make it available for loading in the WORKSPACE file.
+    toolchain_libraries_list = ""
+    for l in toolchain_libraries.split("\n"):
+        if l.startswith("toolchain_libraries ="):
+            toolchain_libraries_list = l
+            break
+    if not toolchain_libraries_list:
+        fail("The toolchain_library variable was not found in pkgdb_to_bzl output.")
+
+    ctx.file(
+        "toolchain_libraries.bzl",
+        executable = False,
+        content = """
+{toolchain_libraries_list}
+""".format(toolchain_libraries_list = toolchain_libraries_list),
+    )
+
 _ahc = repository_rule(
     _ahc_impl,
     local = False,

@@ -214,6 +214,7 @@ for pkg_name, pkg_id in pkg_id_map:
     if pkg_id != pkg_name:
         output += ["""alias(name = '{}', actual = '{}')""".format(pkg_id, pkg_name)]
 
+# The _ahc_impl function recovers this toolchain_libraries variable and assumes it is defined on a single line.
 output += [
     textwrap.dedent("""
       toolchain_libraries = {pkgs}
