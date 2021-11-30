@@ -289,6 +289,7 @@ load(
     "asterius_dependencies_bindist",
     "asterius_dependencies_nix",
     "rules_haskell_asterius_toolchains",
+    "toolchain_libraries",
 )
 
 (asterius_dependencies_nix(
@@ -597,3 +598,26 @@ bind(
 load("//tools:repositories.bzl", "rules_haskell_worker_dependencies")
 
 rules_haskell_worker_dependencies()
+
+# Stack snapshot repository for testing non standard toolchains
+# The toolchain_libraries rule provide a default value for the toolchain_libraries
+# variable, so we can load it even if we are not on linux.
+
+toolchain_libraries(
+    name = "toolchains_libraries",
+    repository = "linux_amd64_asterius" if is_linux else "",
+)
+
+load("@toolchains_libraries//:toolchain_libraries.bzl", "toolchain_libraries")
+
+(
+    stack_snapshot(
+        name = "stackage_asterius",
+        local_snapshot = "@rules_haskell//tests/asterius/stack_toolchain_libraries:snapshot.yaml",
+        packages = [
+            "xhtml",
+        ],
+        stack_snapshot_json = "@rules_haskell//tests/asterius/stack_toolchain_libraries:snapshot.json",
+        toolchain_libraries = toolchain_libraries,
+    ) if is_linux else None
+)
