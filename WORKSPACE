@@ -53,6 +53,7 @@ stack_snapshot(
             "exe",
         ],
     },
+    # local_snapshot = "//:stackage_snapshot.yaml",
     packages = [
         # Core libraries
         "array",
@@ -91,7 +92,6 @@ stack_snapshot(
     ],
     setup_deps = {"polysemy": ["cabal-doctest"]},
     snapshot = test_stack_snapshot,
-    stack_snapshot_json = "//:stackage_snapshot.json" if not is_windows else None,
     tools = [
         # This is not required, as `stack_snapshot` would build alex
         # automatically, however it is used as a test for user provided
@@ -101,6 +101,7 @@ stack_snapshot(
     ],
     vendored_packages = {
         "ghc-paths": "@rules_haskell//tools/ghc-paths",
+        # "Win32": "@rules_haskell//vendor/Win32",
     },
 )
 
@@ -110,7 +111,6 @@ stack_snapshot(
     extra_deps = {"zlib": ["//tests:zlib"]},
     packages = ["zlib"],
     snapshot = test_stack_snapshot,
-    stack_snapshot_json = "//:stackage-zlib-snapshot.json" if not is_windows else None,
 )
 
 stack_snapshot(
@@ -129,7 +129,6 @@ stack_snapshot(
         "hspec",
         "package1",
     ],
-    stack_snapshot_json = "//:stackage-pinning-test_snapshot.json" if not is_windows else None,
 )
 
 # Vendor data-default-instances-containers and data-default-instances-old-local
@@ -200,7 +199,6 @@ stack_snapshot(
     packages = [
         "ghcide",
     ],
-    stack_snapshot_json = "//:ghcide-snapshot.json" if not is_windows else None,
     vendored_packages = {
         "data-default-instances-containers": "@data-default-ic//:lib",
         "data-default-instances-old-locale": "@data-default-ol//:lib",
@@ -617,7 +615,6 @@ load("@toolchains_libraries//:toolchain_libraries.bzl", "toolchain_libraries")
         packages = [
             "xhtml",
         ],
-        stack_snapshot_json = "@rules_haskell//tests/asterius/stack_toolchain_libraries:snapshot.json",
         toolchain_libraries = toolchain_libraries,
     ) if is_linux else None
 )

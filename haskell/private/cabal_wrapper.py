@@ -47,7 +47,7 @@ import sys
 import tempfile
 from generate_cabal_paths_module import generate_cabal_paths_module
 
-debug = False
+debug = True
 verbose = os.environ.get("CABAL_VERBOSE", "") == "True"
 with open(sys.argv.pop(1)) as json_file:
     json_args = json.load(json_file)
@@ -176,6 +176,25 @@ with tmpdir() as distdir:
     os.putenv("TEMP", os.path.join(distdir, "tmp"))
     os.makedirs(os.path.join(distdir, "tmp"))
 
+    with open(json_args["cabal_basename"]) as cabal_file:
+        cabal_file_content = cabal_file.readlines()
+
+    build_type = None
+    for line in cabal_file_content:
+        m = re.match("build-type:\s*Simple", line, re.IGNORECASE)
+        if False and m :
+            os.remove("Setup.hs")
+            if not os.path.exists("Setup.hs"):
+                with open("Setup.hs", 'w') as f:
+                    f.write("""
+module Main where
+import Distribution.Simple
+
+main :: IO ()
+main = defaultMain
+""")
+            else:
+                fail("asda")
 
     # Create a Paths module that will be used instead of the cabal generated one.
     # https://cabal.readthedocs.io/en/3.4/cabal-package.html#accessing-data-files-from-package-code
@@ -218,6 +237,8 @@ with tmpdir() as distdir:
     if "RUNFILES_MANIFEST_FILE" in os.environ:
         del os.environ["RUNFILES_MANIFEST_FILE"]
     runghc_args = [arg.replace("./", execroot + "/") for arg in runghc_args]
+    # run(["pwd"])
+    # run(["ls"])
     run([runghc] + runghc_args + [setup, "configure", \
         component, \
         "--verbose=0", \

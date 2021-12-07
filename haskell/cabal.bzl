@@ -1285,12 +1285,22 @@ version: 0.0.0.0
     if not _stack_version_check(repository_ctx, stack_cmd):
         fail("Stack version not recent enough. Need version 2.3 or newer.")
     stack = [stack_cmd]
+    version_result = _execute_or_fail_loudly(
+        repository_ctx,
+        stack + ["--version"],
+    )
+    print(version_result.stdout)
+    query_result = _execute_or_fail_loudly(
+        repository_ctx,
+        stack + ["dot", "--global-hints"],
+    )
+    print(query_result.stdout)
     exec_result = _execute_or_fail_loudly(
         repository_ctx,
         stack + ["ls", "dependencies", "json", "--global-hints", "--external"],
     )
     package_specs = json_parse(exec_result.stdout)
-
+    print(package_specs)
     resolved = {}
     versioned_packages_names = {_chop_version(p): _version(p) for p in versioned_packages}
     for package_spec in package_specs:
@@ -2123,6 +2133,7 @@ haskell_cabal_library(
                     ),
                 )
     build_file_content = "\n".join(build_file_builder)
+    print(build_file_content)
     repository_ctx.file("BUILD.bazel", build_file_content, executable = False)
 
     # Create aliases to the libraries.
