@@ -60,11 +60,24 @@ func GenerateBazelrc() string {
 }
 
 func BazelCmd(bazelPath string, args ...string) *exec.Cmd {
+        insertBazelFlags := func (flags ...string) []string {
+                for i, arg := range args {
+                        switch arg {
+                                case
+                                    "build",
+                                    "test",
+                                    "run":
+                                    return append(append(append([]string{}, args[:i + 1]...), flags...), args[i + 1:]...)
+                        }
+                }
+                return args
+        }
+
         cmd := exec.Command(bazelPath)
         if bazel_testing.OutputUserRoot != "" {
                 cmd.Args = append(cmd.Args, "--output_user_root="+bazel_testing.OutputUserRoot)
         }
-        cmd.Args = append(cmd.Args, args...)
+        cmd.Args = append(cmd.Args, insertBazelFlags("--announce_rc", "-s")...)
 	// It's important value of $HOME to be invariant between different integration test runs
         // and to be writable directory for bazel test. Probably TEST_TMPDIR is a valid choice
         // but documentation is not clear about it's default value
