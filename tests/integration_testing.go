@@ -17,6 +17,7 @@ func TestMain(m *testing.M, workspace string) {
                 fmt.Fprint(os.Stderr, err)
                 return
         }
+        fmt.Fprintf(os.Stderr, "Testing context: %v\n", Context)
 	defer exec.Command(Context.BazelBinary, "shutdown")
 
         bazel_testing.TestMain(m, bazel_testing.Args{
@@ -94,6 +95,7 @@ func BazelCmd(bazelPath string, args ...string) *exec.Cmd {
                 }
                 cmd.Env = append(cmd.Env, e)
         }
+        fmt.Fprintf(os.Stderr, "bazel cmd: %v\n", cmd.Args)
         return cmd
 }
 
@@ -121,5 +123,6 @@ func BazelOutput(bazelPath string, args ...string) ([]byte, error) {
                 eErr.Stderr = stderr.Bytes()
                 err = &bazel_testing.StderrExitError{Err: eErr}
         }
+        fmt.Fprintf(os.Stderr, "bazel stderr: %v\n", stderr)
         return stdout.Bytes(), err
 }
