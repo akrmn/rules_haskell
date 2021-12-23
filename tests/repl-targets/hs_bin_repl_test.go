@@ -25,10 +25,6 @@ haskell_register_ghc_nixpkgs(
     version = "8.10.4",
 )
 
-load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
-
-rules_haskell_toolchains(version = "8.10.4")
-
 load(
     "@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
     "nixpkgs_cc_configure",
@@ -43,6 +39,10 @@ nixpkgs_cc_configure(
 nixpkgs_python_configure(
     repository = "@rules_haskell//nixpkgs:default.nix",
 )
+
+load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
+
+rules_haskell_toolchains(version = "8.10.4")
 
 -- BUILD.bazel --
 load(
