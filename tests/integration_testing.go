@@ -17,7 +17,7 @@ func TestMain(m *testing.M, workspace string) {
                 fmt.Fprint(os.Stderr, err)
                 return
         }
-        fmt.Fprintf(os.Stderr, "Testing context: %v\n", Context)
+	fmt.Fprintf(os.Stderr, "Testing context: %v\n", Context)
 	defer exec.Command(Context.BazelBinary, "shutdown")
 
         bazel_testing.TestMain(m, bazel_testing.Args{
@@ -78,7 +78,7 @@ func BazelCmd(bazelPath string, args ...string) *exec.Cmd {
         if bazel_testing.OutputUserRoot != "" {
                 cmd.Args = append(cmd.Args, "--output_user_root="+bazel_testing.OutputUserRoot)
         }
-        cmd.Args = append(cmd.Args, insertBazelFlags("--announce_rc", "-s")...)
+        cmd.Args = append(cmd.Args, insertBazelFlags("--announce_rc", "-s", "--toolchain_resolution_debug=true")...)
 	// It's important value of $HOME to be invariant between different integration test runs
         // and to be writable directory for bazel test. Probably TEST_TMPDIR is a valid choice
         // but documentation is not clear about it's default value
