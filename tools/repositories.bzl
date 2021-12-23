@@ -41,8 +41,8 @@ def bazel_binaries_for_integraion_testing():
     http_file(
         name = "bazel_bin_darwin",
         executable = True,
-        sha256 = "2eecc3abb0ff653ed0bffdb9fbfda7b08548c2868f13da4a995f01528db200a9",
-        urls = ["https://github.com/bazelbuild/bazel/releases/download/4.1.0/bazel-4.1.0-darwin-x86_64"],
+        sha256 = "74d93848f0c9d592e341e48341c53c87e3cb304a54a2a1ee9cff3df422f0b23c",
+        urls = ["https://github.com/bazelbuild/bazel/releases/download/4.2.1/bazel-4.2.1-darwin-x86_64"],
     )
 
     http_file(

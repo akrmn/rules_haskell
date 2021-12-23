@@ -32,7 +32,7 @@ load(
 )
 
 nixpkgs_cc_configure(
-    name = "local_config_cc",
+    name = "nixpkgs_config_cc",
     repository = "@rules_haskell//nixpkgs:default.nix",
 )
 
