@@ -53,9 +53,14 @@ func ParseArgs() error {
 func GenerateBazelrc() string {
         bazelrc := "-- .bazelrc --\n"
         if Context.Nixpkgs {
-                bazelrc += "build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host\n"
+                bazelrc += `
+build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+build --incompatible_enable_cc_toolchain_resolution
+`
         } else if runtime.GOOS == "windows" {
-                bazelrc += "build --crosstool_top=@rules_haskell_ghc_windows_amd64//:cc_toolchain\n"
+                bazelrc += `
+build --crosstool_top=@rules_haskell_ghc_windows_amd64//:cc_toolchain
+`
         }
         return bazelrc
 }
